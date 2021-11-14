@@ -1,0 +1,13 @@
+.DS_Store
+.*.swp
+.*.swo
+*.pyc
+__pycache__
+.pytest_cache
+
+.vscode
+.vscode/*
+*.code-workspace
+
+.ruby-version
+*.pem
