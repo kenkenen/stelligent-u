@@ -114,10 +114,22 @@ authorized to in the labs account. These tokens will last approximately
 What method did you use to store the aws credentials?  What are some other
 options?
 
+> I created a script that stores the Access Key ID ($akey), Secret Access Key ($skey), and ARN ($arn) into a JSON. The 
+> JSON is used to create the credentials file. The ARN is pulled from the JSON and stored in a separate variable 
+> ($MFA_SERIAL). A function is declared (generateToken) which prompts the user for a 6 digit code and stores it in a 
+> variable ($MFA_CODE). $MFA_SERIAL and $MFA_CODE are used to execute the awscli command represented by the variable 
+> $authOutput. $authOutput is called and the output is stored in a token file. The credentials file is then overwritten 
+> with the Access Key ID, Secret Access Key, and Session Token stored in the token file. When executed again, the script 
+> will check if the token file exists and if the session expiry date is passed. If it exists and expirt is not passed,
+> the user is presented with a message indicating the token is still valid. If it is passed, then the function is
+> invoked.
+
 ###### Question 0.1.1: 2
 
 Which AWS environment variable cannot be set in order to run the
 `aws sts get-session-token` command?
+
+> AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_SESSION_TOKEN can not be set when running the command.
 
 ##### Option 2: Using AWS Vault to automatically handle your temporary tokens
 
@@ -156,6 +168,9 @@ You want to set an alias in your .bashrc or .zshrc to something like this:
   test access. Use [this GitHub guide](https://help.github.com/articles/connecting-to-github-with-ssh/)
   to get access and clone the private repo to your laptop.
 
+
+> Cloned successfully
+
 #### Lab 0.1.3: Cloud9 Environment
 
 AWS Cloud 9 is a resource to quickly re-create a stock development
@@ -172,6 +187,9 @@ CLI commands as you did in [lab 0.1.1](#lab-011-aws-access-keys):
 - `list-buckets`
 - `describe-instances`
 
+> Currently using IntelliJ as my IDE. Installed the AWS Toolkit to IntelliJ but it seems the lab is using Cloud9 specific
+> features. Setup Cloud9 Stelligent-U environment. 
+
 #### Lab 0.1.4: Clone Repository
 
 Work with your GitHub repo in your Cloud9 development environment. Start
@@ -180,10 +198,13 @@ to configure the Cloud9 instance to work with GitHub.
 
 1. Install git in Cloud9.
 
-1. Clone the repository to your Cloud9 environment. To gain
+2. Clone the repository to your Cloud9 environment. To gain
    access to the repository try using either
    [token authentication](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)
    or an [SSH key](https://help.github.com/articles/connecting-to-github-with-ssh/).
+
+> Completed in IntelliJ. Reproducing in Cloud9. Setup my ssh key. I need to commit the changes I've made so far before 
+> I can clone this repo.
 
 ### Retrospective 0.1
 
@@ -195,6 +216,8 @@ results. What does this tell you about the access the keys give you on
 your laptop and the access you have in the Cloud9 environment? What
 other methods are there to provide this level of access without using
 keys?_
+
+
 
 #### Task
 
