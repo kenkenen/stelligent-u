@@ -205,6 +205,7 @@ to configure the Cloud9 instance to work with GitHub.
 
 > Completed in IntelliJ. Reproducing in Cloud9. Setup my ssh key. I need to commit the changes I've made so far before 
 > I can clone this repo.
+> Succesfully commit and then cloned in Cloud9. Script doesn't work in Cloud9 because credentials is write protected.
 
 ### Retrospective 0.1
 
@@ -217,7 +218,7 @@ your laptop and the access you have in the Cloud9 environment? What
 other methods are there to provide this level of access without using
 keys?_
 
-
+> You have the same access via awscli on your laptop as you do in Cloud9. X.509 certificates can be used to make secure SOAP-protocol requests.
 
 #### Task
 
