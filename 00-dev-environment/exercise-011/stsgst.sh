@@ -7,6 +7,8 @@
 # with MFA. The token is used to overwrite the credentials file with the new credentials, thus allowing access to aws
 # resources via straight aws commands without the need of the --profile flag.
 
+# Prerequisite: jq is used to parse JSON data. This needs to be installed prior to execution of the script.
+
 # Variable declaration for aws directory and profile;
 AWS_DIR="$HOME/.aws"
 PROFILE=""
