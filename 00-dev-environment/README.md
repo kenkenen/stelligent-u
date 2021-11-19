@@ -225,8 +225,8 @@ keys?_
 Configure Cloud9 to work with the programming language you will be using
 to complete the training work. In your Cloud9 Editor, perform the following:
 
-- Please choose either Ruby, Python, Go or NodeJS
-- Create a new branch off master
+- Please choose either Ruby, Python, Go or NodeJS >> Python. Python was installed, but I continued to install pip and boto3.
+- Create a new branch off master 
 - In the 00-dev-environment directory, develop a small "hello world!"
   application in that language
 - Add the files to your new branch, commit them, and push the branch up to
