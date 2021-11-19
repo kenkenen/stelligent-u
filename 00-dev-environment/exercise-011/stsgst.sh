@@ -43,6 +43,11 @@ generateSetupFile(){
       ;;
   esac
   echo '{ "Credentials": { "AccessKeyId": "'"$AKEY"'", "SecretAccessKey": "'"$SKEY"'", "ARN": "'"$ARN"'" } }' > "$AWS_DIR/$SETUP_FILE"
+
+  # The setup file is used to create or overwrite the credentials file.
+  echo "[default]" > "$AWS_DIR"/credentials
+  echo "aws_access_key_id = ""$(cat "$AWS_DIR"/"$SETUP_FILE" | jq -r '.Credentials.AccessKeyId')">> "$AWS_DIR"/credentials
+  echo "aws_secret_access_key = ""$(cat "$AWS_DIR"/"$SETUP_FILE" | jq -r '.Credentials.SecretAccessKey')" >> "$AWS_DIR"/credentials
 }
 
 # Prompts for profile name. Uppercase is converted to lowercase to make it easier to code.
@@ -59,7 +64,7 @@ while [ -z "$PROFILE" ]; do
   if [ ! -e "$AWS_DIR"/"$SETUP_FILE" ]; then
     read -rp "Is this a new profile? " RESPONSE
     case $RESPONSE in
-      "y")
+      "y"|"Y"|"yes"|"Yes")
         generateSetupFile;;
       * )
         PROFILE="";;
@@ -69,11 +74,6 @@ done
 
 # Variable declarations for AWS Token file.
 AWS_TOKEN_FILE=".$PROFILE.awstoken"
-
-# The setup file is used to create or overwrite the credentials file.
-echo "[default]" > "$AWS_DIR"/credentials
-echo "aws_access_key_id = ""$(cat "$AWS_DIR"/"$SETUP_FILE" | jq -r '.Credentials.AccessKeyId')">> "$AWS_DIR"/credentials
-echo "aws_secret_access_key = ""$(cat "$AWS_DIR"/"$SETUP_FILE" | jq -r '.Credentials.SecretAccessKey')" >> "$AWS_DIR"/credentials
 
 # ARN is pulled from the setup file for the serial number parameter in the awscli command.
 MFA_SERIAL=$(cat "$AWS_DIR"/"$SETUP_FILE" | jq -r '.Credentials.ARN')
@@ -122,6 +122,10 @@ if [ -e "$AWS_DIR"/"$AWS_TOKEN_FILE" ]; then
     generateToken
   else
     echo "Your token is still valid"
+    echo "[default]" > "$AWS_DIR"/credentials
+    echo "aws_access_key_id = ""$(cat "$AWS_DIR"/"$AWS_TOKEN_FILE" | jq -r '.Credentials.AccessKeyId')">> "$AWS_DIR"/credentials
+    echo "aws_secret_access_key = ""$(cat "$AWS_DIR"/"$AWS_TOKEN_FILE" | jq -r '.Credentials.SecretAccessKey')" >> "$AWS_DIR"/credentials
+    echo "aws_session_token = ""$(cat "$AWS_DIR"/"$AWS_TOKEN_FILE" | jq -r '.Credentials.SessionToken')" >> "$AWS_DIR"/credentials
     exit 0;
   fi
 else
