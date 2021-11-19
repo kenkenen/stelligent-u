@@ -1,3 +1,4 @@
+# Task from Exercise 0.1.1
 import sys
 
 print('Hello, World!')
