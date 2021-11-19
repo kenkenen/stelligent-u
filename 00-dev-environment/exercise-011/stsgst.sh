@@ -6,50 +6,71 @@
 # This script will run the aws sts get-session-token command to generate a temporary token for AWS CLI authentication
 # with MFA.
 
+# Prompts for profile name. Uppercase is converted to lowercase to make it easier to code.
+read -p "Please enter the profile name [default]: " PROFILE
+case $PROFILE in
+  "") PROFILE="default";;
+  * ) PROFILE=$(echo $PROFILE | tr '[:upper:]' '[:lower:]');
+    ;;
+esac
+
 # Variable declarations for the aws directory, initial setup file, and AWS Token file.
 AWS_DIR="$HOME/.aws"
-SETUP_FILE=".initsetup"
-AWS_TOKEN_FILE=".awstoken"
+SETUP_FILE=".$PROFILE.initsetup"
+AWS_TOKEN_FILE=".$PROFILE.awstoken"
 
-# Checks for the existance of the initial setup file. The user is prompted for access key id, secret access key,
-# and ARN if it does not exist. The values are dumped into a JSON.
-if [ ! -e $AWS_DIR/$SETUP_FILE ]; then
-    while true; do
-       read -p "Please input the Access Key ID: " akey
-       case $akey in
-           "") echo "Please input a valid value.";;
-           * ) break;;
-       esac
-       done
-    while true; do
-       read -p "Please input the Secret Access Key: " skey
-       case $skey in
-           "") echo "Please input a valid value.";;
-           * ) break;;
-       esac
-       done
-    while true; do
-       read -p "Please input the ARN (e.g. \"arn:aws:iam::12345678:mfa/username\"): " arn
-       case $arn in
-           "") echo "Please input a valid value.";;
-           * ) break;;
-       esac
-       done
-       echo '{ "Credentials": { "AccessKeyId": "'$akey'", "SecretAccessKey": "'$skey'", "ARN": "'$arn'" } }' > $AWS_DIR/$SETUP_FILE
-fi
+# Checks if profile name entered is intended to be a new profile, if so, credential details (Access Key ID, Secret Access
+# Key, and ARN) are gathered and saved to a new setup file.
+while [ ! -e $AWS_DIR/$SETUP_FILE ]; do
+  read -p "Is this a new profile? [y/n]: " RESPONSE
+  case $RESPONSE in
+    "y")
+      read -p "Enter the Access Key ID: " AKEY
+      case $AKEY in
+        "")
+          while [ -z $AKEY ]; do
+            read -p "Access Key ID must not be empty. Please enter a valid value: " AKEY
+          done;;
+        * )
+          ;;
+      esac
+      read -p "Enter the Secret Access Key: " SKEY
+      case $SKEY in
+        "")
+          while [ -z $SKEY ]; do
+            read -p "Secret Access Key must not be empty. Please enter a valid value: " SKEY
+          done;;
+        * )
+          ;;
+      esac
+      read -p "Please input the ARN (e.g. \"arn:aws:iam::12345678:mfa/username\"): " ARN
+      case $ARN in
+        "")
+          while [ -z $ARN ]; do
+            read -p "ARN must not be empty. Please enter a valid value: " ARN
+          done;;
+        * )
+          ;;
+      esac
+      echo '{ "Credentials": { "AccessKeyId": "'$AKEY'", "SecretAccessKey": "'$SKEY'", "ARN": "'$ARN'" } }' > $AWS_DIR/$SETUP_FILE;;
+    "n")
+      read -p "Please enter the profile name [default]: " PROFILE;;
+    *  )
+      echo "Please enter y or n";;
+    esac
+done
 
-# The initial setup file is used to create or overwrite the credentials file.
-echo "[default]" > $HOME/.aws/credentials
+# The setup file is used to create or overwrite the credentials file.
+echo "[default]" > $AWS_DIR/credentials
 echo "aws_access_key_id = "`cat $AWS_DIR/$SETUP_FILE | jq -r '.Credentials.AccessKeyId'`>> $AWS_DIR/credentials
 echo "aws_secret_access_key = "`cat $AWS_DIR/$SETUP_FILE | jq -r '.Credentials.SecretAccessKey'` >> $AWS_DIR/credentials
 
-# ARN is pulled from the initial setup file for the serial number parameter in the awscli command.
+# ARN is pulled from the setup file for the serial number parameter in the awscli command.
 MFA_SERIAL=`cat $AWS_DIR/$SETUP_FILE | jq -r '.Credentials.ARN'`
 
-# Function for generating a token using 'aws sts get-session-token' with the entered MFA pin and previously entered
-# ARN.
+# Function for generating a token using 'aws sts get-session-token' with the entered MFA pin and ARN from the setup file.
 generateToken(){
-# The initial setup file is used to overwrite the credentials file.
+# The setup file is used to overwrite the credentials file in order to remove stale credentials.
 echo "[default]" > $HOME/.aws/credentials
 echo "aws_access_key_id = "`cat $AWS_DIR/$SETUP_FILE | jq -r '.Credentials.AccessKeyId'`>> $AWS_DIR/credentials
 echo "aws_secret_access_key = "`cat $AWS_DIR/$SETUP_FILE | jq -r '.Credentials.SecretAccessKey'` >> $AWS_DIR/credentials
@@ -63,19 +84,19 @@ echo "aws_secret_access_key = "`cat $AWS_DIR/$SETUP_FILE | jq -r '.Credentials.S
     esac
   done
 
-  # Variable declared for the awscli command
-  authOutput=`aws sts get-session-token --serial-number $MFA_SERIAL --token-code $MFA_CODE`
+# Variable declared for the awscli command
+authOutput=`aws sts get-session-token --serial-number $MFA_SERIAL --token-code $MFA_CODE`
 
-  # awscli command is executed via echo and the auth token is saved to a file.
-  echo $authOutput > $AWS_DIR/$AWS_TOKEN_FILE
+# awscli command is executed via echo and the auth token is saved to a file.
+echo $authOutput > $AWS_DIR/$AWS_TOKEN_FILE
 
-  # Dump the authentication into the credentials file if the token was generated
-  if [ -e $AWS_DIR/$AWS_TOKEN_FILE ]; then
-    echo "[default]" > $HOME/.aws/credentials
-    echo "aws_access_key_id = "`cat $AWS_DIR/$AWS_TOKEN_FILE | jq -r '.Credentials.AccessKeyId'`>> $AWS_DIR/credentials
-    echo "aws_secret_access_key = "`cat $AWS_DIR/$AWS_TOKEN_FILE | jq -r '.Credentials.SecretAccessKey'` >> $AWS_DIR/credentials
-    echo "aws_session_token = "`cat $AWS_DIR/$AWS_TOKEN_FILE | jq -r '.Credentials.SessionToken'` >> $AWS_DIR/credentials
-  fi
+# Dump the authentication into the credentials file if the token was generated
+if [ -e $AWS_DIR/$AWS_TOKEN_FILE ]; then
+  echo "[default]" > $HOME/.aws/credentials
+  echo "aws_access_key_id = "`cat $AWS_DIR/$AWS_TOKEN_FILE | jq -r '.Credentials.AccessKeyId'`>> $AWS_DIR/credentials
+  echo "aws_secret_access_key = "`cat $AWS_DIR/$AWS_TOKEN_FILE | jq -r '.Credentials.SecretAccessKey'` >> $AWS_DIR/credentials
+  echo "aws_session_token = "`cat $AWS_DIR/$AWS_TOKEN_FILE | jq -r '.Credentials.SessionToken'` >> $AWS_DIR/credentials
+fi
 }
 
 # If the token is already present, it is retrieved from the file, else invoke generateToken
