@@ -98,8 +98,10 @@ done
 
 # The setup file is used to create or overwrite the credentials file.
 echo "[default]" > "$AWS_DIR"/credentials
-echo "aws_access_key_id = ""$(jq -r '.Credentials.AccessKeyId' "$AWS_DIR"/"$SETUP_FILE")">> "$AWS_DIR"/credentials
-echo "aws_secret_access_key = ""$(jq -r '.Credentials.SecretAccessKey' "$AWS_DIR"/"$SETUP_FILE")" >> "$AWS_DIR"/credentials
+{
+  echo "aws_access_key_id = ""$(jq -r '.Credentials.AccessKeyId' "$AWS_DIR"/"$SETUP_FILE")"
+  echo "aws_secret_access_key = ""$(jq -r '.Credentials.SecretAccessKey' "$AWS_DIR"/"$SETUP_FILE")"
+} >> "$AWS_DIR"/credentials
 
 # Variable declarations for AWS Token file.
 AWS_TOKEN_FILE=".$PROFILE.awstoken"
@@ -111,8 +113,10 @@ MFA_SERIAL=$(jq -r '.Credentials.ARN' "$AWS_DIR"/"$SETUP_FILE")
 generateToken(){
 # The setup file is used to overwrite the credentials file in order to remove stale credentials.
 echo "[default]" > "$AWS_DIR"/credentials
-echo "aws_access_key_id = ""$(jq -r '.Credentials.AccessKeyId' "$AWS_DIR"/"$SETUP_FILE")">> "$AWS_DIR"/credentials
-echo "aws_secret_access_key = ""$(jq -r '.Credentials.SecretAccessKey' "$AWS_DIR"/"$SETUP_FILE")" >> "$AWS_DIR"/credentials
+{
+echo "aws_access_key_id = ""$(jq -r '.Credentials.AccessKeyId' "$AWS_DIR"/"$SETUP_FILE")"
+echo "aws_secret_access_key = ""$(jq -r '.Credentials.SecretAccessKey' "$AWS_DIR"/"$SETUP_FILE")"
+} >> "$AWS_DIR"/credentials
 
 # Prompts the user for the 6 digit MFA code.
 if [ -z "$MFA_CODE" ]; then
