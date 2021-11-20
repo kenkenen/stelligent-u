@@ -121,9 +121,9 @@ echo "aws_secret_access_key = ""$(jq -r '.Credentials.SecretAccessKey' "$AWS_DIR
 # Prompts the user for the 6 digit MFA code.
 if [ -z "$MFA_CODE" ]; then
   while true; do
-    read -rp "Please enter the 6 digit code from your MFA device: " mfa_auth
-    case $mfa_auth in
-      [0-9][0-9][0-9][0-9][0-9][0-9] ) MFA_CODE=$mfa_auth; break;;
+    read -rp "Please enter the 6 digit code from your MFA device: " MFA_AUTH
+    case $MFA_AUTH in
+      [0-9][0-9][0-9][0-9][0-9][0-9] ) MFA_CODE=$MFA_AUTH; break;;
       * ) echo "Please enter a valid 6 digit code." ;;
     esac
   done
