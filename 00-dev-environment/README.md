@@ -225,11 +225,15 @@ keys?_
 Configure Cloud9 to work with the programming language you will be using
 to complete the training work. In your Cloud9 Editor, perform the following:
 
-- Please choose either Ruby, Python, Go or NodeJS >> Python. Python was installed, but I continued to install pip and boto3.
-- Create a new branch off master 
+- Please choose either Ruby, Python, Go or NodeJS 
+> Python. Python was installed, but I continued to install pip and boto3.
+- Create a new branch off master
+> Created stu-00dev-exe011
 - In the 00-dev-environment directory, develop a small "hello world!"
   application in that language
+> Created in 00-dev-environment/exercise011/
 - Add the files to your new branch, commit them, and push the branch up to
-  your forked repository
+  your forked repository 
+> Commit and pushed changes.
 - Create a pull request from your branch to the master branch within your forked
   repository and merge after reviewing

@@ -36,7 +36,8 @@ AWS_DIR="$HOME/.aws"
 PROFILE="$1"
 SETUP_FILE=".$PROFILE.initsetup"
 MFA_AUTH="$2"
-
+SUCCESS_MSG="Credentials successfully applied!"
+``
 # Checks that a valid 6 digit pin was entered. Ignored if null.
 while true; do
   case $MFA_AUTH in
@@ -165,6 +166,7 @@ if [ -e "$AWS_DIR"/"$AWS_TOKEN_FILE" ]; then
   if [ "$authExpiry" \< "$nowTime" ]; then
     echo "Your token has expired and must be renewed"
     generateToken
+    echo "$SUCCESS_MSG"
   else
     echo "Your token is still valid."
     echo "[default]" > "$AWS_DIR"/credentials
@@ -173,15 +175,16 @@ if [ -e "$AWS_DIR"/"$AWS_TOKEN_FILE" ]; then
       echo "aws_secret_access_key = ""$(jq -r '.Credentials.SecretAccessKey' "$AWS_DIR"/"$AWS_TOKEN_FILE")";
       echo "aws_session_token = ""$(jq -r '.Credentials.SessionToken' "$AWS_DIR"/"$AWS_TOKEN_FILE")";
     } >> "$AWS_DIR"/credentials
-    echo "Credentials applied successfully!"
+    echo "$SUCCESS_MSG"
     exit 0;
   fi
 else
   if [ -z "$(jq -r '.Credentials.ARN' "$AWS_DIR"/"$SETUP_FILE")" ]; then
-    echo "Credentials applied successfully!"
+    echo "$SUCCESS_MSG"
     exit 0;
   else
     generateToken
+    echo "$SUCCESS_MSG"
   fi
 fi
 
