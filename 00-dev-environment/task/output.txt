@@ -1,0 +1,20 @@
+Buckets:
+	
+	arkin-devops
+	cf-templates-6pnqm14desgt-us-east-1
+	codepipeline-us-east-2-953292674726
+
+Creating new bucket: arkin-dev-my-test-bucket
+Buckets:
+	
+	arkin-dev-my-test-bucket
+	arkin-devops
+	cf-templates-6pnqm14desgt-us-east-1
+	codepipeline-us-east-2-953292674726
+
+Deleting bucket: arkin-dev-my-test-bucket
+Buckets:
+	
+	arkin-devops
+	cf-templates-6pnqm14desgt-us-east-1
+	codepipeline-us-east-2-953292674726
