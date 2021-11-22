@@ -80,10 +80,16 @@ create an AWS Simple Storage Service (S3) Bucket.
 
 - Always write your CloudFormation [templates in YAML](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-formats.html).
 
+> lab111.yaml writen. Very simple. It only includes a description and an indication for resource type.
+
 - Launch a Stack by [using the AWS CLI tool](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/create-stack.html)
   to run the template. Use your preferred region.
 
+> I had to upload the yaml to S3 before I could launch the stack with Cloudformation.
+
 - Note the output provided by creating the Stack.
+
+> "StackId": "arn:aws:cloudformation:us-east-1:166777502109:stack/stu-01cloudformation-practice11/622bfd10-4bd5-11ec-88bf-12fb6e4d7bd1"
 
 - Though *functionally* unnecessary, the Description (i.e. its *purpose*)
   element documents your code's *intent*, so provide one. The Description
@@ -93,6 +99,8 @@ create an AWS Simple Storage Service (S3) Bucket.
   [here](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html)
   for a useful guide to the anatomy of a template as well as
   [YAML terminology](https://yaml.org/spec/1.2/spec.html#id2759768).
+
+> Description was added when I created the template.
 
 - Commit the template to your Github repository under the 01-cloudformation
   folder.

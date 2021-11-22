@@ -107,7 +107,9 @@ authorized to in the labs account. These tokens will last approximately
 
 1. Create a script to automate the gathering and assigning of the temporary
   AWS MFA credentials from Option 1.
-1. Try to reduce the amount of manual input as much as possible.
+2. Try to reduce the amount of manual input as much as possible.
+
+> I created the script stsgst.sh for the task. It resides in 00-dev-environment/exercise-011
 
 ###### Question 0.1.1: 1
 
@@ -237,3 +239,4 @@ to complete the training work. In your Cloud9 Editor, perform the following:
 > Commit and pushed changes.
 - Create a pull request from your branch to the master branch within your forked
   repository and merge after reviewing
+> Merged successfully.
