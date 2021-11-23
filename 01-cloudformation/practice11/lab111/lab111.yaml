@@ -1,0 +1,12 @@
+Description:
+  Most minimal CFS template possible to create an S3 storage bucket.
+Parameters:
+  BucketNameParameter:
+    Description: Bucket Name
+    Type: String
+Resources:
+  LabBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        Ref: BucketNameParameter

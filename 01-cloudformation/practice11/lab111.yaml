@@ -1,6 +1,0 @@
-Description:
-  Most minimal CFS template possible to create an S3 storage bucket.
-
-Resources:
-  LabBucket:
-    Type: "AWS::S3::Bucket"

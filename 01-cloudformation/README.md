@@ -105,17 +105,27 @@ create an AWS Simple Storage Service (S3) Bucket.
 - Commit the template to your Github repository under the 01-cloudformation
   folder.
 
+> Commit and pushed
+
 #### Lab 1.1.2: Stack Parameters
 
 Update the same template by adding a CloudFormation
 [Parameter](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html)
 to the stack and use the parameter's value as the name of the S3 bucket.
 
+> Added a parameter to name the bucket.
+
 - Put your parameter into a separate JSON file and pass that file to the CLI.
+
+> Used a parameter.json file to feed the parameters 
 
 - Update your stack.
 
+> Stack update completed successfully.
+
 - Add the template changes and new parameter file to your Github repo.
+
+> Commit and push
 
 #### Lab 1.1.3: Pseudo-Parameters
 
