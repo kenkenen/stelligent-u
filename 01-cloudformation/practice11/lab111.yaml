@@ -1,0 +1,5 @@
+Description:
+  STU 01-Clo Pra11 - Lab 1.1.1 - Most minimal template for S3 bucket stack creation.
+Resources:
+  LabBucket:
+    Type: AWS::S3::Bucket

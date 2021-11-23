@@ -117,11 +117,16 @@ to the stack and use the parameter's value as the name of the S3 bucket.
 
 - Put your parameter into a separate JSON file and pass that file to the CLI.
 
-> Used a parameter.json file to feed the parameters 
+> Created lab112_parameters.json to feed the parameters 
 
 - Update your stack.
 
-> Stack update completed successfully.
+> Stack update completed successfully using the following command:
+> aws cloudformation update-stack --stack-name stu-01cloudformation-practice11 --template-url https://kenkenen-devops.s3.amazonaws.com/lab112.yaml --parameters file://lab112/lab112_parameters.json
+> Result:
+> {
+>   "StackId": "arn:aws:cloudformation:us-east-1:166777502109:stack/stu-01cloudformation-practice11/6bd8a210-4c65-11ec-9309-0e01ee6fdd8b"
+> }
 
 - Add the template changes and new parameter file to your Github repo.
 
@@ -136,12 +141,26 @@ running the template from (i.e., using
 
 - Use built-in CFN string functions to combine the two strings for the Bucket name.
 
+> Found reference material:
+> https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-join.html
+> I think Fn::Join is going to be my champion.
+
 - Do not hard code the Account ID. Do not use an additional parameter to
   provide the Account ID value.
 
+> I was able to reference the AccountID as the prefix using !Sub ${AWS::AccountId}
+
 - Update the stack.
 
+> Updated completed:
+> practice11 % aws cloudformation update-stack --stack-name stu-01cloudformation-practice11 --template-url https://kenkenen-devops.s3.amazonaws.com/lab113.yaml --parameters file://lab113_params.json
+> {
+> "StackId": "arn:aws:cloudformation:us-east-1:166777502109:stack/stu-01cloudformation-practice11/c4fc6550-4c76-11ec-bff8-128b740e4617"
+> }
+
 - Commit the changes to your Github repo.
+
+> Commit and push
 
 #### Lab 1.1.4: Using Conditions
 

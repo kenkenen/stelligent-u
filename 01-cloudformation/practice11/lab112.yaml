@@ -1,7 +1,7 @@
 Description:
-  Most minimal CFS template possible to create an S3 storage bucket.
+  STU 01-Clo Pra11 - Lab 1.1.2 - Update of Lab 1.1.1 w/ parameter usage.
 Parameters:
-  BucketNameParameter:
+  BucketNameParam:
     Description: Bucket Name
     Type: String
 Resources:
@@ -9,4 +9,5 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName:
-        Ref: BucketNameParameter
+        Ref: BucketNameParam
+

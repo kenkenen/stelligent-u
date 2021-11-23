@@ -1,0 +1,15 @@
+Description:
+  STU 01-Clo Pra11 - Lab 1.1.3 - Update of Lab 1.1.2 w/ pseudo param and function usage.
+Parameters:
+  BucketSuffixParam:
+    Description: Bucket Name Suffix
+    Type: String
+Resources:
+  LabBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join
+        - '-'
+        - - !Sub ${AWS::AccountId}
+          - !Ref BucketSuffixParam
+
