@@ -85,10 +85,12 @@ create an AWS Simple Storage Service (S3) Bucket.
 - Launch a Stack by [using the AWS CLI tool](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/create-stack.html)
   to run the template. Use your preferred region.
 
-> I had to upload the yaml to S3 before I could launch the stack with Cloudformation.
+> I had to upload the yaml to S3 before I could launch the stack with Cloudformation. aws s3api put-object --body 
+> lab111.yaml --key lab111.yaml
 
 - Note the output provided by creating the Stack.
 
+> aws cloudformation create-stack --stack-name stu-01clo-pra11 --template-body file://lab111.yaml
 > "StackId": "arn:aws:cloudformation:us-east-1:166777502109:stack/stu-01cloudformation-practice11/622bfd10-4bd5-11ec-88bf-12fb6e4d7bd1"
 
 - Though *functionally* unnecessary, the Description (i.e. its *purpose*)
@@ -173,10 +175,16 @@ name.
 
 - Update the stack that you originally deployed.
 
+> Updated the stack and it kept the name. No update needed.
+
 - Create a new stack _with the same stack name_, but this time
   deploying to some region other than your preferred region.
 
+> Deploying to a new region set the bucket name with the region as I configured in the yaml.
+
 - Commit the changes to your Github repo.
+
+> Commit
 
 #### Lab 1.1.5: Termination Protection; Clean up
 

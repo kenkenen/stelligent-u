@@ -1,0 +1,21 @@
+Description:
+  STU 01-Clo Pra11 - Lab 1.1.4 - Update of Lab 1.1.3 w/ conditionals.
+Parameters:
+  BucketSuffixParam:
+    Description: Bucket Name Suffix
+    Type: String
+Conditions:
+  TargetRegion:
+    !Equals [!Ref AWS::Region, us-east-1]
+Resources:
+  LabBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        !Join
+          - '-'
+          - - !If
+              - TargetRegion
+              - !Sub ${AWS::AccountId}
+              - !Sub ${AWS::Region}
+            - !Ref BucketSuffixParam
