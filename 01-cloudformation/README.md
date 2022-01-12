@@ -192,12 +192,22 @@ name.
   [Termination Protection](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-protect-stacks.html)
   to one of them.
 
+> Applied on the stack I created on us-east-1 via the console.
+
 - Try to delete the Stack using the AWS CLI. What happens?
+
+> I couldn't delete it. Got a message:
+> An error occurred (ValidationError) when calling the DeleteStack operation: Stack [stu-01cloudformation-practice11] 
+> cannot be deleted while TerminationProtection is enabled
 
 - Remove termination protection and try again.
 
+> Deleted just fine
+
 - List the S3 buckets in both regions once this lesson's Stacks have been
   deleted to ensure their removal.
+
+> Buckets have been deleted
 
 ### Retrospective 1.1
 
@@ -205,18 +215,28 @@ name.
 
 _Why do we prefer the YAML format for CFN templates?_
 
+> It's less cluttered and simpler. Reads a lot more like human language.
+
 #### Question: Protecting Resources
 
 _What else can you do to prevent resources in a stack from being deleted?_
 
 See [DeletionPolicy](https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-accidental-updates/).
 
+> Deletion policy attributes can prevent deletion at the stack level for individual resources. IAM policies can control
+> who can delete what. Stack policies can prevent updates.
+
 _How is that different from applying Termination Protection?_
+
+> Termination protection protects the stack from being deleted in console and awscli regardless of policy or IAM
+> configurations.
 
 #### Task: String Substitution
 
 Demonstrate 2 ways to code string combination/substitution using
 built-in CFN functions.
+
+> In the labs, I used !Ref and !Sub for string substitution. I combined strings using !Join. This works for YAML.
 
 ## Lesson 1.2: Integration with Other AWS Resources
 
@@ -246,6 +266,14 @@ IAM Managed Policy that controls that user.
 
 - Create the Stack.
 
+> I had errors when trying to create the stack. I needed to append '--capabilities CAPABILITY_NAMED_IAM' to the
+> create-stack command. Stack creation failed several times due to malformed YAML and I was having trouble getting
+> the policy assigned to the user. Ended up declaring the policy as a property of the user. This worked. I used the
+> following pages for reference:
+> 
+> https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_statement.html
+> https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/quickref-iam.html#scenario-iam-user
+
 #### Lab 1.2.2: Exposing Resource Details via Exports
 
 Update the template by adding a CFN Output that exports the Managed
@@ -255,6 +283,12 @@ Policy's Amazon Resource Name ([ARN](https://docs.aws.amazon.com/general/latest/
 
 - [List all the Stack Exports](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/list-exports.html)
   in that Stack's region.
+
+> By using a !Ref I was able to retrieve the arn of Policy1 in my template. Added an Export: Name: and now it is being
+> listed in exports:
+> "ExportingStackId": "arn:aws:cloudformation:us-east-1:166777502109:stack/stu-01clo-pra12/6deaaec0-6346-11ec-bc61-12b328e07a67",
+> "Name": "stu-01clo-pra12-vlab122",
+> "Value": "arn:aws:iam::166777502109:policy/stu-01clo-pra12-vlab122"
 
 #### Lab 1.2.3: Importing another Stack's Exports
 
@@ -266,11 +300,17 @@ the Managed Policy ARN created by and exported from the previous Stack.
 - [List all the Stack Imports](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/list-imports.html)
   in that stack's region.
 
+> Created new template and imported the arn of the previously created policy using !ImportValue
+
 #### Lab 1.2.4: Import/Export Dependencies
 
 Delete your CFN stacks in the same order you created them in. Did you
 succeed? If not, describe how you would _identify_ the problem, and
 resolve it yourself.
+
+> I wasn't able to delete the first stack. Error message in the events showed "Export stu-01clo-pra12-vlab122 cannot 
+> be deleted as it is in use by stu-01clo-pra12-lab123". I would need to remove the import from that stack or delete
+> that stack first.
 
 ### Retrospective 1.2
 
@@ -279,6 +319,10 @@ resolve it yourself.
 Show how to use the IAM policy tester to demonstrate that the user
 cannot perform 'Put' actions on any S3 buckets.
 
+> https://policysim.aws.amazon.com/home/index.jsp?#users/labuser1
+> 
+> I was able to select all of the put actions and run the simulation. All actions were denied.
+
 #### Task: SSM Parameter Store
 
 Using the AWS Console, create a Systems Manager Parameter Store
@@ -286,6 +330,11 @@ parameter in the same region as the first Stack, and provide a value for
 that parameter. Modify the first Stack's template so that it utilizes
 this Parameter Store parameter value as the IAM User's name. Update the
 first stack. Finally, tear it down.
+
+> Created a parameter and was able to update the stack with the new user name pulled from the parameter. I had to use 
+> --parameters with the create-stack command to pull the newly created SSM parameter into the template. Tear down of
+> the stack failed initially because the user could not be deleted with the policy assigned. Simply running it again
+> deleted it successfully.
 
 ## Lesson 1.3: Portability & Staying DRY
 
@@ -307,6 +356,8 @@ for a more thorough list of recommendations for improving your use of
 CloudFormation). Some lab exercises have already demonstrated
 portability (_can you point out where?_) and this lesson will focus
 on it specifically.
+
+> Previous labs used AWS specific parameters. These are portable configurations. 
 
 #### Lab 1.3.1: Scripts and Configuration
 

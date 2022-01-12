@@ -1,0 +1,37 @@
+Description:
+  STU 01-Clo Pra12 - Lab 1.2.2 - Update of Lab 1.2.1 w/ Exports.
+Parameters:
+  UserName:
+    Description: IAM user name
+    Type: String
+    Default: labuser1
+Resources:
+  Policy1:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Managed policy for module 01-cloudformation Prectice 1.2 Lab 1.2.1
+      ManagedPolicyName: stu-01clo-pra12-vlab122
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement: {
+          "Effect": "Allow",
+          "Action": [
+              "s3:Get*",
+              "s3:List*",
+              "s3-object-lambda:Get*",
+              "s3-object-lambda:List*"
+          ],
+          "Resource": "*"
+        }
+      Users:
+        - !Ref UserName
+  User1:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Ref UserName
+Outputs:
+  ManagedPolicyArn:
+    Description: The ARN for the policy generated for the labuser.
+    Value: !Ref Policy1
+    Export:
+      Name: stu-01clo-pra12-vlab122

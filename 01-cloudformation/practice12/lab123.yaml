@@ -1,0 +1,15 @@
+Description:
+  STU 01-Clo Pra12 - Lab 1.2.3
+Parameters:
+  UserName:
+    Description: IAM user name
+    Type: String
+    Default: labuser2
+Resources:
+  User1:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Ref UserName
+      ManagedPolicyArns:
+        - !ImportValue stu-01clo-pra12-vlab122
+
